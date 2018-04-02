@@ -1,0 +1,45 @@
+apply plugin: 'com.android.application'
+
+android {
+
+    signingConfigs {
+        debug {
+            storeFile file("keystore/debug.keystore")
+            storePassword "firesun"
+            keyAlias "firesun"
+            keyPassword "firesun"
+        }
+        release {
+            storeFile file("keystore/release.keystore")
+            storePassword "firesun"
+            keyAlias "firesun"
+            keyPassword "firesun"
+        }
+    }
+
+    compileSdkVersion 23
+    buildToolsVersion "27.0.3"
+    defaultConfig {
+        applicationId "me.firesun.wechat.enhancement"
+        minSdkVersion 15
+        targetSdkVersion 23
+        versionCode 33
+        versionName "1.0.0"
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled true
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compileOnly files('libs/XposedBridgeApi-82.jar')
+    implementation 'com.android.support:appcompat-v7:23.1.1'
+    implementation 'net.dongliu:apk-parser:2.4.2'
+}
+

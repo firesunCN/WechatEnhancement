@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">微信增强插件</string>
+    <string name="app_desc">抢红包，防撤回，去广告</string>
+    <string name="pref_open">抢红包</string>
+    <string name="pref_not_self">自己发的不抢</string>
+    <string name="pref_delay">延时抢红包</string>
+    <string name="pref_delay_time">延时时长</string>
+    <string name="pref_whisper">私聊不抢</string>
+    <string name="quick_open">快速拆包</string>
+    <string name="receive_transfer">自动接收转账</string>
+    <string name="pref_show_wechat_id">显示微信ID</string>
+    <string name="delay_message">延迟0毫秒拆开红包</string>
+    <string name="setting">设置</string>
+    <string name="luckmoney_setting">红包设置</string>
+
+    <string name="AntiRevoke_setting">防撤回设置</string>
+    <string name="ADBlock_setting">广告设置</string>
+    <string name="pref_enable_adblock">过滤朋友圈广告</string>
+    <string name="pref_enable_anti_revoke">消息防撤回</string>
+    <string name="pref_enable_anti_sns_delete">朋友圈防删除</string>
+    <string name="about">关于</string>
+    <string name="author">作者</string>
+    <string name="acknowledgements">致谢</string>
+    <string name="wechat_donate">微信捐赠</string>
+    <string name="alipay_donate">支付宝捐赠</string>
+    <string name="not_contains">包含关键字不抢</string>
+    <string name="not_contains_hit">请输入关键字, 以,分隔</string>
+    <string name="black_list">包含微信ID不抢</string>
+    <string name="black_list_hit">请输入微信ID, 以,分隔</string>
+</resources>

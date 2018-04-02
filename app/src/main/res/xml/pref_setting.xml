@@ -1,0 +1,95 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/luckmoney_setting">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="open"
+            android:title="@string/pref_open" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:dependency="open"
+            android:key="not_self"
+            android:title="@string/pref_not_self" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:dependency="open"
+            android:key="not_whisper"
+            android:title="@string/pref_whisper" />
+
+        <EditTextPreference
+            android:dependency="open"
+            android:hint="@string/not_contains_hit"
+            android:key="not_contains"
+            android:title="@string/not_contains" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:dependency="open"
+            android:key="delay"
+            android:title="@string/pref_delay" />
+
+        <me.firesun.wechat.enhancement.RangePreference
+            end="delay_max"
+            start="delay_min"
+            android:defaultValue="true"
+            android:dependency="delay"
+            android:title="@string/pref_delay_time" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:dependency="open"
+            android:key="show_wechat_id"
+            android:title="@string/pref_show_wechat_id" />
+
+        <EditTextPreference
+            android:dependency="open"
+            android:hint="@string/black_list_hit"
+            android:key="black_list"
+            android:title="@string/black_list" />
+
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="quick_open"
+            android:title="@string/quick_open" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="receive_transfer"
+            android:title="@string/receive_transfer" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/AntiRevoke_setting">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="is_anti_revoke"
+            android:title="@string/pref_enable_anti_revoke" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="is_anti_sns_delete"
+            android:title="@string/pref_enable_anti_sns_delete" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/ADBlock_setting">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="is_adblock"
+            android:title="@string/pref_enable_adblock" />
+    </PreferenceCategory>
+
+
+    <PreferenceCategory android:title="@string/about">
+        <Preference
+            android:key="author"
+            android:summary="firesun"
+            android:title="@string/author" />
+        <Preference
+            android:key="author"
+            android:summary="veryyoung, Gh0u1L5, wuxiaosu"
+            android:title="@string/acknowledgements" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
