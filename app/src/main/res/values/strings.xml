@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">微信增强插件</string>
+    <string name="app_name">微信增强</string>
     <string name="app_desc">抢红包，防撤回，去广告</string>
     <string name="pref_open">抢红包</string>
     <string name="pref_not_self">自己发的不抢</string>

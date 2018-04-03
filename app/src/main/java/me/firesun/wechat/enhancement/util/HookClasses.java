@@ -143,7 +143,6 @@ public class HookClasses {
 
 
         LuckyMoneyRequestClass = ReflectionUtil.findClassesFromPackage(lpparam.classLoader, wxClasses, "com.tencent.mm.plugin.luckymoney", 1)
-
                 .filterByField("talker", "java.lang.String")
                 .filterByMethod(void.class, int.class, String.class, JSONObject.class)
                 .filterByMethod(int.class, "getType")

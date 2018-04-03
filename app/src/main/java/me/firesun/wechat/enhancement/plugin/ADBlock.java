@@ -7,6 +7,8 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import me.firesun.wechat.enhancement.PreferencesUtils;
 import me.firesun.wechat.enhancement.util.HookClasses;
 
+import static de.robv.android.xposed.XposedBridge.log;
+
 
 public class ADBlock {
     private static ADBlock instance = null;
@@ -31,6 +33,7 @@ public class ADBlock {
                     if (param.args[1].equals("ADInfo"))
                         param.setResult(null);
                 } catch (Error | Exception e) {
+                    log("error:"+e);
                 }
 
             }

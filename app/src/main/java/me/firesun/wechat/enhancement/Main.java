@@ -40,7 +40,6 @@ public class Main implements IXposedHookLoadPackage {
     }
 
     private void loadPlugins(LoadPackageParam lpparam) {
-
         try {
             ADBlock.getInstance().hook(lpparam);
             AntiRevoke.getInstance().hook(lpparam);

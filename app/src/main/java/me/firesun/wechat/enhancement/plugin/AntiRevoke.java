@@ -13,6 +13,8 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import me.firesun.wechat.enhancement.PreferencesUtils;
 import me.firesun.wechat.enhancement.util.HookClasses;
 
+import static de.robv.android.xposed.XposedBridge.log;
+
 
 public class AntiRevoke {
     private static AntiRevoke instance = null;
@@ -47,6 +49,7 @@ public class AntiRevoke {
                         }
                     }
                 } catch (Error | Exception e) {
+                    log("error:"+e);
                 }
             }
         });
@@ -65,6 +68,7 @@ public class AntiRevoke {
                     }
 
                 } catch (Error | Exception e) {
+                    log("error:"+e);
                 }
             }
         });
@@ -81,6 +85,7 @@ public class AntiRevoke {
                     if ((path.contains("/image2/") || path.contains("/voice2/") || path.contains("/video/")))
                         param.setResult(true);
                 } catch (Error | Exception e) {
+                    log("error:"+e);
                 }
 
             }
@@ -100,6 +105,7 @@ public class AntiRevoke {
                     long msgId = XposedHelpers.getLongField(msg, "field_msgId");
                     msgCacheMap.put(msgId, msg);
                 } catch (Error | Exception e) {
+                    log("error:"+e);
                 }
 
             }

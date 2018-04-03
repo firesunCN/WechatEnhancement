@@ -12,6 +12,8 @@ import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import me.firesun.wechat.enhancement.util.HookClasses;
 
+import static de.robv.android.xposed.XposedBridge.log;
+
 
 public class HideModule {
     private static HideModule instance = null;
@@ -41,6 +43,7 @@ public class HideModule {
                     }
                     param.setResult(resultApplicationList);
                 } catch (Error | Exception e) {
+                    log("error:"+e);
                 }
 
             }
@@ -61,7 +64,7 @@ public class HideModule {
                     }
                     param.setResult(resultpackageInfoList);
                 } catch (Error | Exception e) {
-                    e.printStackTrace();
+                    log("error:"+e);
                 }
             }
         });
@@ -73,9 +76,9 @@ public class HideModule {
                     String packageName = (String) param.args[0];
                     if (packageName.contains("firesun") || packageName.contains("xposed")) {
                         param.args[0] = HookClasses.WECHAT_PACKAGE_NAME;
-
                     }
                 } catch (Error | Exception e) {
+                    log("error:"+e);
                 }
             }
         });
@@ -89,6 +92,7 @@ public class HideModule {
                         param.args[0] = HookClasses.WECHAT_PACKAGE_NAME;
                     }
                 } catch (Error | Exception e) {
+                    log("error:"+e);
                 }
             }
         });
@@ -108,6 +112,7 @@ public class HideModule {
                     }
                     param.setResult(resultList);
                 } catch (Error | Exception e) {
+                    log("error:"+e);
                 }
             }
         });
@@ -127,6 +132,7 @@ public class HideModule {
                     }
                     param.setResult(resultList);
                 } catch (Error | Exception e) {
+                    log("error:"+e);
                 }
             }
         });
@@ -146,6 +152,7 @@ public class HideModule {
                     }
                     param.setResult(resultList);
                 } catch (Error | Exception e) {
+                    log("error:"+e);
                 }
             }
         });

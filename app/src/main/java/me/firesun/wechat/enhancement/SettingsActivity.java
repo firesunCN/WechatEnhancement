@@ -16,7 +16,6 @@ public class SettingsActivity extends AppCompatActivity {
 
     private SettingsFragment mSettingsFragment;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,19 +27,16 @@ public class SettingsActivity extends AppCompatActivity {
 
     }
 
-
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void replaceFragment(int viewId, android.app.Fragment fragment) {
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(viewId, fragment).commit();
     }
 
-
     /**
      * A placeholder fragment containing a settings view.
      */
     public static class SettingsFragment extends PreferenceFragment {
-
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -58,7 +54,6 @@ public class SettingsActivity extends AppCompatActivity {
                     return true;
                 }
             });
-
         }
     }
 }

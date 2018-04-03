@@ -10,6 +10,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import me.firesun.wechat.enhancement.PreferencesUtils;
 import me.firesun.wechat.enhancement.util.HookClasses;
 
+import static de.robv.android.xposed.XposedBridge.log;
 import static java.util.Arrays.copyOfRange;
 
 
@@ -36,7 +37,6 @@ public class AntiSnsDelete {
                         return;
                     }
 
-
                     if (param.args[0].equals("SnsInfo")) {
                         ContentValues contentValues = ((ContentValues) param.args[1]);
                         int type = contentValues.getAsInteger("type");
@@ -45,6 +45,7 @@ public class AntiSnsDelete {
                             handleMomentDelete(contentValues);
                         }
                     }
+
                     if (param.args[0].equals("SnsComment")) {
                         ContentValues contentValues = ((ContentValues) param.args[1]);
                         int type = contentValues.getAsInteger("type");
@@ -54,6 +55,7 @@ public class AntiSnsDelete {
                         }
                     }
                 } catch (Error | Exception e) {
+                    log("error:"+e);
                 }
 
             }

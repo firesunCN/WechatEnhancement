@@ -23,8 +23,8 @@ android {
         applicationId "me.firesun.wechat.enhancement"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 33
-        versionName "1.0.0"
+        versionCode 35
+        versionName "1.1.0"
     }
 
     buildTypes {
@@ -35,6 +35,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
 }
 
 dependencies {
