@@ -3,7 +3,7 @@
 
 目前支持抢红包，自动接收转账，消息防撤回，朋友圈防删除，朋友圈去广告
 
-自适应方式采用微信巫师的自动搜索方式，理论支持微信全版本，微信升级后理论上可继续支持（微信6.6.5测试通过）
+自适应方式采用微信巫师的自动搜索方式，理论支持微信全版本，微信升级后理论上可继续支持（微信6.6.0,6.6.3，6.6.5测试通过）
 
 # 效果预览
 <img src="https://raw.githubusercontent.com/firesunCN/WechatEnhancement/master/image/screenshot1.jpg" width="45%" /> <img src="https://raw.githubusercontent.com/firesunCN/WechatEnhancement/master/image/screenshot2.jpg" width="45%" />
