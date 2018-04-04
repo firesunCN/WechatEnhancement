@@ -12,12 +12,13 @@
     <string name="delay_message">延迟0毫秒拆开红包</string>
     <string name="setting">设置</string>
     <string name="luckmoney_setting">红包设置</string>
-
+    <string name="other_setting">其他设置</string>
     <string name="AntiRevoke_setting">防撤回设置</string>
     <string name="ADBlock_setting">广告设置</string>
     <string name="pref_enable_adblock">过滤朋友圈广告</string>
     <string name="pref_enable_anti_revoke">消息防撤回</string>
     <string name="pref_enable_anti_sns_delete">朋友圈防删除</string>
+    <string name="pref_show_icon">显示图标</string>
     <string name="about">关于</string>
     <string name="author">作者</string>
     <string name="acknowledgements">致谢</string>

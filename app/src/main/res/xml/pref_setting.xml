@@ -80,6 +80,13 @@
     </PreferenceCategory>
 
 
+    <PreferenceCategory android:title="@string/other_setting">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="show_icon"
+            android:title="@string/pref_show_icon" />
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/about">
         <Preference
             android:key="author"
