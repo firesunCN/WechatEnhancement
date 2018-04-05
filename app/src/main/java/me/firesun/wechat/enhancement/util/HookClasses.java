@@ -21,6 +21,7 @@ public class HookClasses {
     public static String SQLiteDatabaseDeleteMethod = "delete";
     public static String ContactInfoUIClassName = "com.tencent.mm.plugin.profile.ui.ContactInfoUI";
     public static String ChatroomInfoUIClassName = "com.tencent.mm.plugin.chatroom.ui.ChatroomInfoUI";
+    public static String WebWXLoginUIClassName = "com.tencent.mm.plugin.webwx.ui.ExtDeviceWXLoginUI";
     public static Class XMLParserClass;
     public static String XMLParserMethod;
     public static Class MsgInfoClass;

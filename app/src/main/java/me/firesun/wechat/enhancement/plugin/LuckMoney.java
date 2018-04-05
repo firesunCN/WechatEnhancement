@@ -69,7 +69,7 @@ public class LuckMoney {
                         handleTransfer(contentValues, lpparam);
                     }
                 } catch (Error | Exception e) {
-                    log("error:"+e);
+                    log("error:" + e);
                 }
             }
         });
@@ -98,7 +98,7 @@ public class LuckMoney {
                     luckyMoneyMessages.remove(0);
 
                 } catch (Error | Exception e) {
-                    log("error:"+e);
+                    log("error:" + e);
                 }
             }
         });
@@ -114,7 +114,7 @@ public class LuckMoney {
                         }
                     }
                 } catch (Error | Exception e) {
-                    log("error:"+e);
+                    log("error:" + e);
                 }
             }
         });
@@ -131,7 +131,7 @@ public class LuckMoney {
                         Toast.makeText(activity, "微信ID:" + wechatId + "已复制到剪切板", LENGTH_LONG).show();
                     }
                 } catch (Error | Exception e) {
-                    log("error:"+e);
+                    log("error:" + e);
                 }
             }
         });
@@ -148,7 +148,7 @@ public class LuckMoney {
                         Toast.makeText(activity, "微信ID:" + wechatId + "已复制到剪切板", LENGTH_LONG).show();
                     }
                 } catch (Error | Exception e) {
-                    log("error:"+e);
+                    log("error:" + e);
                 }
             }
         });

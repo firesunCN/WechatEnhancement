@@ -72,11 +72,15 @@
             android:title="@string/pref_enable_anti_sns_delete" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/ADBlock_setting">
+    <PreferenceCategory android:title="@string/function_setting">
         <SwitchPreference
             android:defaultValue="false"
             android:key="is_adblock"
             android:title="@string/pref_enable_adblock" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="is_autologin"
+            android:title="@string/pref_enable_autologin" />
     </PreferenceCategory>
 
 

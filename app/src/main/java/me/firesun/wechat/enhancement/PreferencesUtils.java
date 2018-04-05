@@ -73,6 +73,10 @@ public class PreferencesUtils {
         return getInstance().getBoolean("is_adblock", false);
     }
 
+    public static boolean isAutoLogin() {
+        return getInstance().getBoolean("is_autologin", false);
+    }
+
 
 }
 

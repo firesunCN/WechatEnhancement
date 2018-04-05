@@ -7,6 +7,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 import me.firesun.wechat.enhancement.plugin.ADBlock;
 import me.firesun.wechat.enhancement.plugin.AntiRevoke;
 import me.firesun.wechat.enhancement.plugin.AntiSnsDelete;
+import me.firesun.wechat.enhancement.plugin.AutoLogin;
 import me.firesun.wechat.enhancement.plugin.HideModule;
 import me.firesun.wechat.enhancement.plugin.LuckMoney;
 import me.firesun.wechat.enhancement.util.HookClasses;
@@ -45,6 +46,7 @@ public class Main implements IXposedHookLoadPackage {
             AntiRevoke.getInstance().hook(lpparam);
             AntiSnsDelete.getInstance().hook(lpparam);
             LuckMoney.getInstance().hook(lpparam);
+            AutoLogin.getInstance().hook(lpparam);
             HideModule.getInstance().hook(lpparam);
         } catch (Error | Exception e) {
             log("loadPlugins error" + e);
