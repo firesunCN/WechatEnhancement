@@ -75,12 +75,16 @@
     <PreferenceCategory android:title="@string/function_setting">
         <SwitchPreference
             android:defaultValue="false"
-            android:key="is_adblock"
+            android:key="is_ad_block"
             android:title="@string/pref_enable_adblock" />
         <SwitchPreference
             android:defaultValue="false"
-            android:key="is_autologin"
+            android:key="is_auto_login"
             android:title="@string/pref_enable_autologin" />
+        <!--<SwitchPreference-->
+            <!--android:defaultValue="true"-->
+            <!--android:key="is_break_limit"-->
+            <!--android:title="@string/pref_break_limit" />-->
     </PreferenceCategory>
 
 
@@ -89,6 +93,9 @@
             android:defaultValue="true"
             android:key="show_icon"
             android:title="@string/pref_show_icon" />
+        <Preference
+            android:key="repair"
+            android:title="@string/repair" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/about">

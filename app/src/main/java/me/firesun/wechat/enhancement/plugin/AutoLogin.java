@@ -11,9 +11,6 @@ import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import me.firesun.wechat.enhancement.PreferencesUtils;
 import me.firesun.wechat.enhancement.util.HookClasses;
-import me.firesun.wechat.enhancement.util.ReflectionUtil;
-
-import static de.robv.android.xposed.XposedBridge.log;
 
 
 public class AutoLogin {
@@ -35,6 +32,9 @@ public class AutoLogin {
                 try {
                     if (!PreferencesUtils.isAutoLogin())
                         return;
+                    if (!(param.thisObject instanceof Activity)) {
+                        return;
+                    }
                     Activity activity = (Activity) param.thisObject;
                     if (activity.getClass().getName().equals(HookClasses.WebWXLoginUIClassName)) {
                         Class clazz = activity.getClass();
@@ -46,7 +46,6 @@ public class AutoLogin {
                     }
 
                 } catch (Error | Exception e) {
-                    log("error:" + e);
                 }
             }
         });

@@ -70,13 +70,16 @@ public class PreferencesUtils {
     }
 
     public static boolean isADBlock() {
-        return getInstance().getBoolean("is_adblock", false);
+        return getInstance().getBoolean("is_ad_block", false);
     }
 
     public static boolean isAutoLogin() {
-        return getInstance().getBoolean("is_autologin", false);
+        return getInstance().getBoolean("is_auto_login", false);
     }
 
+//    public static boolean isBreakLimit() {
+//        return getInstance().getBoolean("is_break_limit", false);
+//    }
 
 }
 

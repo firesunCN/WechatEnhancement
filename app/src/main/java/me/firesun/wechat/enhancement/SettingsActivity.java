@@ -2,9 +2,12 @@ package me.firesun.wechat.enhancement;
 
 
 import android.annotation.TargetApi;
+import android.app.Application;
 import android.app.FragmentManager;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -12,8 +15,14 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.CompoundButton;
+import android.widget.Toast;
+
+import java.lang.reflect.Method;
+
+import me.firesun.wechat.enhancement.util.HookClasses;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -41,8 +50,9 @@ public class SettingsActivity extends AppCompatActivity {
      */
     public static class SettingsFragment extends PreferenceFragment {
         @Override
-        public void onCreate(Bundle savedInstanceState) {
+        public void onCreate(final Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+
             getPreferenceManager().setSharedPreferencesMode(MODE_WORLD_READABLE);
             addPreferencesFromResource(R.xml.pref_setting);
 
@@ -68,7 +78,35 @@ public class SettingsActivity extends AppCompatActivity {
                     return true;
                 }
             });
+
+            Preference repair = findPreference("repair");
+            repair.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference pref) {
+                    Context context = getApplication();
+                    if (context != null) {
+                        SharedPreferences.Editor editor = context.getSharedPreferences(HookClasses.WECHAT_ENHANCEMENT_CONFIG_NAME, Context.MODE_WORLD_READABLE).edit();
+                        editor.clear();
+                        editor.commit();
+                        Toast toast = Toast.makeText(context, getString(R.string.repair_done), Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+                    return true;
+                }
+            });
         }
+
+        private Application getApplication() {
+            try {
+                final Class<?> activityThreadClass =
+                        Class.forName("android.app.ActivityThread");
+                final Method method = activityThreadClass.getMethod("currentApplication");
+                return (Application) method.invoke(null, (Object[]) null);
+            } catch (Exception e) {
+            }
+            return null;
+        }
+
     }
 
 }

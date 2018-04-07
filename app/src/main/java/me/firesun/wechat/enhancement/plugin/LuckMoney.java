@@ -28,7 +28,6 @@ import me.firesun.wechat.enhancement.util.XmlToJson;
 
 import static android.text.TextUtils.isEmpty;
 import static android.widget.Toast.LENGTH_LONG;
-import static de.robv.android.xposed.XposedBridge.log;
 import static de.robv.android.xposed.XposedHelpers.callMethod;
 import static de.robv.android.xposed.XposedHelpers.callStaticMethod;
 import static de.robv.android.xposed.XposedHelpers.findFirstFieldByExactType;
@@ -69,7 +68,6 @@ public class LuckMoney {
                         handleTransfer(contentValues, lpparam);
                     }
                 } catch (Error | Exception e) {
-                    log("error:" + e);
                 }
             }
         });
@@ -98,7 +96,6 @@ public class LuckMoney {
                     luckyMoneyMessages.remove(0);
 
                 } catch (Error | Exception e) {
-                    log("error:" + e);
                 }
             }
         });
@@ -114,7 +111,6 @@ public class LuckMoney {
                         }
                     }
                 } catch (Error | Exception e) {
-                    log("error:" + e);
                 }
             }
         });
@@ -131,7 +127,6 @@ public class LuckMoney {
                         Toast.makeText(activity, "微信ID:" + wechatId + "已复制到剪切板", LENGTH_LONG).show();
                     }
                 } catch (Error | Exception e) {
-                    log("error:" + e);
                 }
             }
         });
@@ -148,7 +143,6 @@ public class LuckMoney {
                         Toast.makeText(activity, "微信ID:" + wechatId + "已复制到剪切板", LENGTH_LONG).show();
                     }
                 } catch (Error | Exception e) {
-                    log("error:" + e);
                 }
             }
         });

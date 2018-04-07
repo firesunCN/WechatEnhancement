@@ -17,9 +17,14 @@
     <string name="function_setting">增强功能</string>
     <string name="pref_enable_adblock">过滤朋友圈广告</string>
     <string name="pref_enable_autologin">电脑微信自动登录</string>
+    <string name="pref_break_limit">突破9张图片限制</string>
+    <string name="button_select_all">全选</string>
     <string name="pref_enable_anti_revoke">消息防撤回</string>
     <string name="pref_enable_anti_sns_delete">朋友圈防删除</string>
+    <string name="revoke_prompt_msg">你撤回了一条消息</string>
     <string name="pref_show_icon">显示图标</string>
+    <string name="repair">尝试修复插件</string>
+    <string name="repair_done">修复完成，请重启微信</string>
     <string name="about">关于</string>
     <string name="author">作者</string>
     <string name="acknowledgements">致谢</string>

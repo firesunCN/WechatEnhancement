@@ -1,5 +1,9 @@
 package me.firesun.wechat.enhancement.util;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+
 import net.dongliu.apk.parser.ApkFile;
 import net.dongliu.apk.parser.bean.DexClass;
 
@@ -9,11 +13,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
+import me.firesun.wechat.enhancement.Main;
+
+import static de.robv.android.xposed.XposedBridge.log;
 
 
 public class HookClasses {
+    public static final String SAVE_WECHAT_ENHANCEMENT_CONFIG = "wechat.intent.action.SAVE_WECHAT_ENHANCEMENT_CONFIG";
+    public static final String WECHAT_ENHANCEMENT_CONFIG_NAME = "wechat_enhancement_config";
+
     public static final String WECHAT_PACKAGE_NAME = "com.tencent.mm";
     public static String SQLiteDatabaseClassName = "com.tencent.wcdb.database.SQLiteDatabase";
     public static String SQLiteDatabaseUpdateMethod = "updateWithOnConflict";
@@ -22,6 +33,11 @@ public class HookClasses {
     public static String ContactInfoUIClassName = "com.tencent.mm.plugin.profile.ui.ContactInfoUI";
     public static String ChatroomInfoUIClassName = "com.tencent.mm.plugin.chatroom.ui.ChatroomInfoUI";
     public static String WebWXLoginUIClassName = "com.tencent.mm.plugin.webwx.ui.ExtDeviceWXLoginUI";
+    public static String AlbumPreviewUIClassName = "com.tencent.mm.plugin.gallery.ui.AlbumPreviewUI";
+    public static String SelectContactUIClassName = "com.tencent.mm.ui.contact.SelectContactUI";
+    public static String MMActivityClassName = "com.tencent.mm.ui.MMActivity";
+    public static String SelectConversationUIClassName = "com.tencent.mm.ui.transmit.SelectConversationUI";
+    public static String LuckyMoneyReceiveUIClassName = "com.tencent.mm.plugin.luckymoney.ui.LuckyMoneyReceiveUI";
     public static Class XMLParserClass;
     public static String XMLParserMethod;
     public static Class MsgInfoClass;
@@ -29,7 +45,6 @@ public class HookClasses {
     public static String MsgInfoStorageInsertMethod;
     public static Class ReceiveUIParamNameClass;
     public static String ReceiveUIMethod;
-    public static String LuckyMoneyReceiveUIClassName = "com.tencent.mm.plugin.luckymoney.ui.LuckyMoneyReceiveUI";
     public static Class NetworkRequestClass;
     public static Class RequestCallerClass;
     public static String RequestCallerMethod;
@@ -39,12 +54,18 @@ public class HookClasses {
     public static Class LuckyMoneyRequestClass;
     public static Class GetTransferRequestClass;
     public static boolean hasTimingIdentifier = true;
-    private static String versionName = "";
+    public static String versionName = null;
     private static List<String> wxClasses = new ArrayList();
 
-    public static void init(XC_LoadPackage.LoadPackageParam lpparam, String versionName) {
-        HookClasses.versionName = versionName;
 
+    private static XSharedPreferences preferencesInstance = null;
+
+    public static void init(Context context, XC_LoadPackage.LoadPackageParam lpparam, String versionName) {
+        if (loadConfig(lpparam, versionName))
+            return;
+
+        log("failed to load config, start finding...");
+        HookClasses.versionName = versionName;
         int versionNum = getVersionNum(versionName);
         if (versionNum >= getVersionNum("6.5.6") && versionNum <= getVersionNum("6.5.23"))
             LuckyMoneyReceiveUIClassName = "com.tencent.mm.plugin.luckymoney.ui.En_fba4b94f";
@@ -52,9 +73,6 @@ public class HookClasses {
             SQLiteDatabaseClassName = "com.tencent.mmdb.database.SQLiteDatabase";
         if (versionNum < getVersionNum("6.5.4"))
             hasTimingIdentifier = false;
-
-        if (!wxClasses.isEmpty())
-            return;
 
         ApkFile apkFile = null;
         try {
@@ -158,6 +176,7 @@ public class HookClasses {
                 .filterByMethod(String.class, "getUri")
                 .firstOrNull();
 
+        saveConfig(context);
     }
 
     public static int getVersionNum(String version) {
@@ -168,4 +187,102 @@ public class HookClasses {
             return 0;
     }
 
+    private static boolean loadConfig(XC_LoadPackage.LoadPackageParam lpparam, String curVersionName) {
+        try {
+            SharedPreferences pref = getPreferencesInstance();
+
+            String versionName = pref.getString("versionName", "");
+            if (!versionName.equals(curVersionName)) {
+                return false;
+            }
+
+            ClassLoader classLoader = lpparam.classLoader;
+            SQLiteDatabaseClassName = pref.getString("SQLiteDatabaseClassName", "");
+            SQLiteDatabaseUpdateMethod = pref.getString("SQLiteDatabaseUpdateMethod", "");
+            SQLiteDatabaseInsertMethod = pref.getString("SQLiteDatabaseInsertMethod", "");
+            SQLiteDatabaseDeleteMethod = pref.getString("SQLiteDatabaseDeleteMethod", "");
+            ContactInfoUIClassName = pref.getString("ContactInfoUIClassName", "");
+            ChatroomInfoUIClassName = pref.getString("ChatroomInfoUIClassName", "");
+            WebWXLoginUIClassName = pref.getString("WebWXLoginUIClassName", "");
+            AlbumPreviewUIClassName = pref.getString("AlbumPreviewUIClassName", "");
+            SelectContactUIClassName = pref.getString("SelectContactUIClassName", "");
+            MMActivityClassName = pref.getString("MMActivityClassName", "");
+            SelectConversationUIClassName = pref.getString("SelectConversationUIClassName", "");
+            LuckyMoneyReceiveUIClassName = pref.getString("LuckyMoneyReceiveUIClassName", "");
+
+            XMLParserClass = ReflectionUtil.findClassIfExists(pref.getString("XMLParserClass", ""), classLoader);
+            XMLParserMethod = pref.getString("XMLParserMethod", "");
+            MsgInfoClass = ReflectionUtil.findClassIfExists(pref.getString("MsgInfoClass", ""), classLoader);
+            MsgInfoStorageClass = ReflectionUtil.findClassIfExists(pref.getString("MsgInfoStorageClass", ""), classLoader);
+            MsgInfoStorageInsertMethod = pref.getString("MsgInfoStorageInsertMethod", "");
+            ReceiveUIParamNameClass = ReflectionUtil.findClassIfExists(pref.getString("ReceiveUIParamNameClass", ""), classLoader);
+            ReceiveUIMethod = pref.getString("ReceiveUIMethod", "");
+            NetworkRequestClass = ReflectionUtil.findClassIfExists(pref.getString("NetworkRequestClass", ""), classLoader);
+            RequestCallerClass = ReflectionUtil.findClassIfExists(pref.getString("RequestCallerClass", ""), classLoader);
+            RequestCallerMethod = pref.getString("RequestCallerMethod", "");
+            GetNetworkByModelMethod = pref.getString("GetNetworkByModelMethod", "");
+            ReceiveLuckyMoneyRequestClass = ReflectionUtil.findClassIfExists(pref.getString("ReceiveLuckyMoneyRequestClass", ""), classLoader);
+            ReceiveLuckyMoneyRequestMethod = pref.getString("ReceiveLuckyMoneyRequestMethod", "");
+            LuckyMoneyRequestClass = ReflectionUtil.findClassIfExists(pref.getString("LuckyMoneyRequestClass", ""), classLoader);
+            GetTransferRequestClass = ReflectionUtil.findClassIfExists(pref.getString("GetTransferRequestClass", ""), classLoader);
+            hasTimingIdentifier = pref.getBoolean("hasTimingIdentifier", true);
+
+            log("load config successful");
+            return true;
+        } catch (Error | Exception e) {
+        }
+        return false;
+    }
+
+    private static void saveConfig(Context context) {
+        try {
+            Intent saveConfigIntent = new Intent();
+            saveConfigIntent.setAction(SAVE_WECHAT_ENHANCEMENT_CONFIG);
+            saveConfigIntent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+
+            saveConfigIntent.putExtra("versionName", versionName);
+            saveConfigIntent.putExtra("SQLiteDatabaseClassName", SQLiteDatabaseClassName);
+            saveConfigIntent.putExtra("SQLiteDatabaseUpdateMethod", SQLiteDatabaseUpdateMethod);
+            saveConfigIntent.putExtra("SQLiteDatabaseInsertMethod", SQLiteDatabaseInsertMethod);
+            saveConfigIntent.putExtra("SQLiteDatabaseDeleteMethod", SQLiteDatabaseDeleteMethod);
+            saveConfigIntent.putExtra("ContactInfoUIClassName", ContactInfoUIClassName);
+            saveConfigIntent.putExtra("ChatroomInfoUIClassName", ChatroomInfoUIClassName);
+            saveConfigIntent.putExtra("WebWXLoginUIClassName", WebWXLoginUIClassName);
+            saveConfigIntent.putExtra("AlbumPreviewUIClassName", AlbumPreviewUIClassName);
+            saveConfigIntent.putExtra("SelectContactUIClassName", SelectContactUIClassName);
+            saveConfigIntent.putExtra("MMActivityClassName", MMActivityClassName);
+            saveConfigIntent.putExtra("SelectConversationUIClassName", SelectConversationUIClassName);
+            saveConfigIntent.putExtra("LuckyMoneyReceiveUIClassName", LuckyMoneyReceiveUIClassName);
+
+            saveConfigIntent.putExtra("XMLParserClass", XMLParserClass.getName());
+            saveConfigIntent.putExtra("XMLParserMethod", XMLParserMethod);
+            saveConfigIntent.putExtra("MsgInfoClass", MsgInfoClass.getName());
+            saveConfigIntent.putExtra("MsgInfoStorageClass", MsgInfoStorageClass.getName());
+            saveConfigIntent.putExtra("MsgInfoStorageInsertMethod", MsgInfoStorageInsertMethod);
+            saveConfigIntent.putExtra("ReceiveUIParamNameClass", ReceiveUIParamNameClass.getName());
+            saveConfigIntent.putExtra("ReceiveUIMethod", ReceiveUIMethod);
+            saveConfigIntent.putExtra("NetworkRequestClass", NetworkRequestClass.getName());
+            saveConfigIntent.putExtra("RequestCallerClass", RequestCallerClass.getName());
+            saveConfigIntent.putExtra("RequestCallerMethod", RequestCallerMethod);
+            saveConfigIntent.putExtra("GetNetworkByModelMethod", GetNetworkByModelMethod);
+            saveConfigIntent.putExtra("ReceiveLuckyMoneyRequestClass", ReceiveLuckyMoneyRequestClass.getName());
+            saveConfigIntent.putExtra("ReceiveLuckyMoneyRequestMethod", ReceiveLuckyMoneyRequestMethod);
+            saveConfigIntent.putExtra("LuckyMoneyRequestClass", LuckyMoneyRequestClass.getName());
+            saveConfigIntent.putExtra("GetTransferRequestClass", GetTransferRequestClass.getName());
+            saveConfigIntent.putExtra("hasTimingIdentifier", hasTimingIdentifier);
+            context.sendBroadcast(saveConfigIntent);
+            log("saving config...");
+        } catch (Error | Exception e) {
+        }
+    }
+
+    private static XSharedPreferences getPreferencesInstance() {
+        if (preferencesInstance == null) {
+            preferencesInstance = new XSharedPreferences(Main.class.getPackage().getName(), WECHAT_ENHANCEMENT_CONFIG_NAME);
+            preferencesInstance.makeWorldReadable();
+        } else {
+            preferencesInstance.reload();
+        }
+        return preferencesInstance;
+    }
 }

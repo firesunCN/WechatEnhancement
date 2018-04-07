@@ -1,8 +1,13 @@
 package me.firesun.wechat.enhancement;
 
 import android.content.Context;
+import android.content.ContextWrapper;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
+import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 import me.firesun.wechat.enhancement.plugin.ADBlock;
 import me.firesun.wechat.enhancement.plugin.AntiRevoke;
@@ -13,31 +18,43 @@ import me.firesun.wechat.enhancement.plugin.LuckMoney;
 import me.firesun.wechat.enhancement.util.HookClasses;
 
 import static de.robv.android.xposed.XposedBridge.log;
-import static de.robv.android.xposed.XposedHelpers.callMethod;
-import static de.robv.android.xposed.XposedHelpers.callStaticMethod;
-import static de.robv.android.xposed.XposedHelpers.findClass;
 
 
 public class Main implements IXposedHookLoadPackage {
-    private static String wechatVersion = "";
 
     @Override
-    public void handleLoadPackage(final LoadPackageParam lpparam) throws Throwable {
+    public void handleLoadPackage(final LoadPackageParam lpparam) {
         if (lpparam.packageName.equals(HookClasses.WECHAT_PACKAGE_NAME)) {
-            initParams(lpparam);
-            loadPlugins(lpparam);
+            try {
+                XposedHelpers.findAndHookMethod(ContextWrapper.class, "attachBaseContext", Context.class, new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
+                        super.afterHookedMethod(param);
+                        Context context = (Context) param.args[0];
+                        String versionName = getVersionName(context, HookClasses.WECHAT_PACKAGE_NAME);
+                        log("Found wechat version:" + versionName);
+                        if (HookClasses.versionName == null) {
+                            HookClasses.init(context, lpparam, versionName);
+                            loadPlugins(lpparam);
+                        }
+                    }
+                });
+            } catch (Error | Exception e) {
+            }
+
         }
 
     }
 
-    private void initParams(LoadPackageParam lpparam) throws Throwable {
-        if (wechatVersion.equals("")) {
-            Context context = (Context) callMethod(callStaticMethod(findClass("android.app.ActivityThread", null), "currentActivityThread", new Object[0]), "getSystemContext", new Object[0]);
-            String versionName = context.getPackageManager().getPackageInfo(lpparam.packageName, 0).versionName;
-            log("Found wechat version:" + versionName);
-            wechatVersion = versionName;
-            HookClasses.init(lpparam, versionName);
+    private String getVersionName(Context context, String packageName) {
+        try {
+            PackageManager packageManager = context.getPackageManager();
+            PackageInfo packInfo = packageManager.getPackageInfo(packageName, 0);
+            return packInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
         }
+        return "";
     }
 
     private void loadPlugins(LoadPackageParam lpparam) {

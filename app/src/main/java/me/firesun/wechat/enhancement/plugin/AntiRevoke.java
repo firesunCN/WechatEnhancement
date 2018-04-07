@@ -11,9 +11,10 @@ import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import me.firesun.wechat.enhancement.PreferencesUtils;
+import me.firesun.wechat.enhancement.R;
 import me.firesun.wechat.enhancement.util.HookClasses;
 
-import static de.robv.android.xposed.XposedBridge.log;
+import static net.dongliu.apk.parser.struct.xml.Attribute.AttrIds.getString;
 
 
 public class AntiRevoke {
@@ -43,13 +44,12 @@ public class AntiRevoke {
                         ContentValues contentValues = ((ContentValues) param.args[1]);
 
                         if (contentValues.getAsInteger("type") == 10000 &&
-                                !contentValues.getAsString("content").equals("你撤回了一条消息")) {
+                                !contentValues.getAsString("content").equals(getString(R.string.revoke_prompt_msg))) {
                             handleMessageRecall(contentValues);
                             param.setResult(1);
                         }
                     }
                 } catch (Error | Exception e) {
-                    log("error:"+e);
                 }
             }
         });
@@ -68,7 +68,6 @@ public class AntiRevoke {
                     }
 
                 } catch (Error | Exception e) {
-                    log("error:"+e);
                 }
             }
         });
@@ -85,7 +84,6 @@ public class AntiRevoke {
                     if ((path.contains("/image2/") || path.contains("/voice2/") || path.contains("/video/")))
                         param.setResult(true);
                 } catch (Error | Exception e) {
-                    log("error:"+e);
                 }
 
             }
@@ -105,7 +103,6 @@ public class AntiRevoke {
                     long msgId = XposedHelpers.getLongField(msg, "field_msgId");
                     msgCacheMap.put(msgId, msg);
                 } catch (Error | Exception e) {
-                    log("error:"+e);
                 }
 
             }
