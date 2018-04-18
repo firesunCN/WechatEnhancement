@@ -2,6 +2,7 @@ package me.firesun.wechat.enhancement.plugin;
 
 import android.content.ContentValues;
 
+
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -42,9 +43,10 @@ public class AntiRevoke {
 
                     if (param.args[0].equals("message")) {
                         ContentValues contentValues = ((ContentValues) param.args[1]);
-
                         if (contentValues.getAsInteger("type") == 10000 &&
-                                !contentValues.getAsString("content").equals(getString(R.string.revoke_prompt_msg))) {
+                                !contentValues.getAsString("content").equals("你撤回了一条消息") &&
+                                !contentValues.getAsString("content").equals("You've recalled a message")
+                                ) {
                             handleMessageRecall(contentValues);
                             param.setResult(1);
                         }
