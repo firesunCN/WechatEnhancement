@@ -10,7 +10,7 @@ import java.util.List;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
-import me.firesun.wechat.enhancement.util.HookClasses;
+import me.firesun.wechat.enhancement.util.HookParams;
 
 
 public class HideModule {
@@ -71,7 +71,7 @@ public class HideModule {
                 try {
                     String packageName = (String) param.args[0];
                     if (packageName.contains("firesun") || packageName.contains("xposed")) {
-                        param.args[0] = HookClasses.WECHAT_PACKAGE_NAME;
+                        param.args[0] = HookParams.WECHAT_PACKAGE_NAME;
                     }
                 } catch (Error | Exception e) {
                 }
@@ -84,7 +84,7 @@ public class HideModule {
                 try {
                     String packageName = (String) param.args[0];
                     if (packageName.contains("firesun") || packageName.contains("xposed")) {
-                        param.args[0] = HookClasses.WECHAT_PACKAGE_NAME;
+                        param.args[0] = HookParams.WECHAT_PACKAGE_NAME;
                     }
                 } catch (Error | Exception e) {
                 }

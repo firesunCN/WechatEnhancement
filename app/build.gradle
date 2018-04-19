@@ -23,8 +23,8 @@ android {
         applicationId "me.firesun.wechat.enhancement"
         minSdkVersion 17
         targetSdkVersion 23
-        versionCode 39
-        versionName "1.5.0"
+        versionCode 40
+        versionName "1.6.0"
     }
 
     buildTypes {
@@ -42,5 +42,6 @@ dependencies {
     compileOnly files('libs/XposedBridgeApi-82.jar')
     implementation 'com.android.support:appcompat-v7:23.1.1'
     implementation 'net.dongliu:apk-parser:2.4.2'
+    implementation 'com.google.code.gson:gson:2.8.2'
 }
 

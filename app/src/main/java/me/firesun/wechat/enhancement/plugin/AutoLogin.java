@@ -10,7 +10,7 @@ import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import me.firesun.wechat.enhancement.PreferencesUtils;
-import me.firesun.wechat.enhancement.util.HookClasses;
+import me.firesun.wechat.enhancement.util.HookParams;
 
 
 public class AutoLogin {
@@ -36,7 +36,7 @@ public class AutoLogin {
                         return;
                     }
                     Activity activity = (Activity) param.thisObject;
-                    if (activity.getClass().getName().equals(HookClasses.WebWXLoginUIClassName)) {
+                    if (activity.getClass().getName().equals(HookParams.getInstance().WebWXLoginUIClassName)) {
                         Class clazz = activity.getClass();
                         Field field = XposedHelpers.findFirstFieldByExactType(clazz, Button.class);
                         Button button = (Button) field.get(activity);

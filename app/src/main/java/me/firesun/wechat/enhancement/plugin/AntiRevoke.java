@@ -12,10 +12,7 @@ import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import me.firesun.wechat.enhancement.PreferencesUtils;
-import me.firesun.wechat.enhancement.R;
-import me.firesun.wechat.enhancement.util.HookClasses;
-
-import static net.dongliu.apk.parser.struct.xml.Attribute.AttrIds.getString;
+import me.firesun.wechat.enhancement.util.HookParams;
 
 
 public class AntiRevoke {
@@ -33,7 +30,7 @@ public class AntiRevoke {
     }
 
     public static void hook(XC_LoadPackage.LoadPackageParam lpparam) {
-        XposedHelpers.findAndHookMethod(HookClasses.SQLiteDatabaseClassName, lpparam.classLoader, HookClasses.SQLiteDatabaseUpdateMethod, String.class, ContentValues.class, String.class, String[].class, int.class, new XC_MethodHook() {
+        XposedHelpers.findAndHookMethod(HookParams.getInstance().SQLiteDatabaseClassName, lpparam.classLoader, HookParams.getInstance().SQLiteDatabaseUpdateMethod, String.class, ContentValues.class, String.class, String[].class, int.class, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) {
                 try {
@@ -56,7 +53,7 @@ public class AntiRevoke {
             }
         });
 
-        XposedHelpers.findAndHookMethod(HookClasses.SQLiteDatabaseClassName, lpparam.classLoader, HookClasses.SQLiteDatabaseDeleteMethod, String.class, String.class, String[].class, new XC_MethodHook() {
+        XposedHelpers.findAndHookMethod(HookParams.getInstance().SQLiteDatabaseClassName, lpparam.classLoader, HookParams.getInstance().SQLiteDatabaseDeleteMethod, String.class, String.class, String[].class, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) {
                 try {
@@ -91,8 +88,8 @@ public class AntiRevoke {
             }
         });
 
-
-        XposedHelpers.findAndHookMethod(HookClasses.MsgInfoStorageClass, HookClasses.MsgInfoStorageInsertMethod, HookClasses.MsgInfoClass, boolean.class, new XC_MethodHook() {
+        Class msgInfoClass = XposedHelpers.findClass(HookParams.getInstance().MsgInfoClassName, lpparam.classLoader);
+        XposedHelpers.findAndHookMethod(HookParams.getInstance().MsgInfoStorageClassName, lpparam.classLoader, HookParams.getInstance().MsgInfoStorageInsertMethod, msgInfoClass, boolean.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) {
                 try {

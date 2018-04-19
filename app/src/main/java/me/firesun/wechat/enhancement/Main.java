@@ -1,11 +1,9 @@
 package me.firesun.wechat.enhancement;
 
-import android.app.ActivityManager;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.util.Log;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
@@ -17,7 +15,8 @@ import me.firesun.wechat.enhancement.plugin.AntiSnsDelete;
 import me.firesun.wechat.enhancement.plugin.AutoLogin;
 import me.firesun.wechat.enhancement.plugin.HideModule;
 import me.firesun.wechat.enhancement.plugin.LuckMoney;
-import me.firesun.wechat.enhancement.util.HookClasses;
+import me.firesun.wechat.enhancement.util.HookParams;
+import me.firesun.wechat.enhancement.util.SearchClasses;
 
 import static de.robv.android.xposed.XposedBridge.log;
 
@@ -26,7 +25,7 @@ public class Main implements IXposedHookLoadPackage {
 
     @Override
     public void handleLoadPackage(final LoadPackageParam lpparam) {
-        if (lpparam.packageName.equals(HookClasses.WECHAT_PACKAGE_NAME)) {
+        if (lpparam.packageName.equals(HookParams.WECHAT_PACKAGE_NAME)) {
             try {
                 XposedHelpers.findAndHookMethod(ContextWrapper.class, "attachBaseContext", Context.class, new XC_MethodHook() {
                     @Override
@@ -35,15 +34,15 @@ public class Main implements IXposedHookLoadPackage {
                         Context context = (Context) param.args[0];
                         String processName = lpparam.processName;
                         //Only hook important process
-                        if (!processName.equals(HookClasses.WECHAT_PACKAGE_NAME) &&
-                                !processName.equals(HookClasses.WECHAT_PACKAGE_NAME + ":tools")
+                        if (!processName.equals(HookParams.WECHAT_PACKAGE_NAME) &&
+                                !processName.equals(HookParams.WECHAT_PACKAGE_NAME + ":tools")
                                 ) {
                             return;
                         }
-                        String versionName = getVersionName(context, HookClasses.WECHAT_PACKAGE_NAME);
+                        String versionName = getVersionName(context, HookParams.WECHAT_PACKAGE_NAME);
                         log("Found wechat version:" + versionName);
-                        if (HookClasses.versionName == null) {
-                            HookClasses.init(context, lpparam, versionName);
+                        if (!HookParams.hasInstance()) {
+                            SearchClasses.init(context, lpparam, versionName);
                             loadPlugins(lpparam);
                         }
                     }
@@ -61,7 +60,6 @@ public class Main implements IXposedHookLoadPackage {
             PackageInfo packInfo = packageManager.getPackageInfo(packageName, 0);
             return packInfo.versionName;
         } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
         }
         return "";
     }

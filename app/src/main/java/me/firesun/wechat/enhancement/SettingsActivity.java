@@ -15,14 +15,13 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import java.lang.reflect.Method;
 
-import me.firesun.wechat.enhancement.util.HookClasses;
+import me.firesun.wechat.enhancement.util.HookParams;
+
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -85,7 +84,7 @@ public class SettingsActivity extends AppCompatActivity {
                 public boolean onPreferenceClick(Preference pref) {
                     Context context = getApplication();
                     if (context != null) {
-                        SharedPreferences.Editor editor = context.getSharedPreferences(HookClasses.WECHAT_ENHANCEMENT_CONFIG_NAME, Context.MODE_WORLD_READABLE).edit();
+                        SharedPreferences.Editor editor = context.getSharedPreferences(HookParams.WECHAT_ENHANCEMENT_CONFIG_NAME, Context.MODE_WORLD_READABLE).edit();
                         editor.clear();
                         editor.commit();
                         Toast toast = Toast.makeText(context, getString(R.string.repair_done), Toast.LENGTH_SHORT);

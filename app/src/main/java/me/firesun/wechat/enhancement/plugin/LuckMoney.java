@@ -23,7 +23,7 @@ import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import me.firesun.wechat.enhancement.PreferencesUtils;
-import me.firesun.wechat.enhancement.util.HookClasses;
+import me.firesun.wechat.enhancement.util.HookParams;
 import me.firesun.wechat.enhancement.util.XmlToJson;
 
 import static android.text.TextUtils.isEmpty;
@@ -49,7 +49,7 @@ public class LuckMoney {
     }
 
     public void hook(final XC_LoadPackage.LoadPackageParam lpparam) {
-        XposedHelpers.findAndHookMethod(HookClasses.SQLiteDatabaseClassName, lpparam.classLoader, HookClasses.SQLiteDatabaseInsertMethod, String.class, String.class, ContentValues.class, new XC_MethodHook() {
+        XposedHelpers.findAndHookMethod(HookParams.getInstance().SQLiteDatabaseClassName, lpparam.classLoader, HookParams.getInstance().SQLiteDatabaseInsertMethod, String.class, String.class, ContentValues.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) {
                 try {
@@ -73,11 +73,11 @@ public class LuckMoney {
         });
 
 
-        XposedHelpers.findAndHookMethod(HookClasses.ReceiveLuckyMoneyRequestClass, HookClasses.ReceiveLuckyMoneyRequestMethod, int.class, String.class, JSONObject.class, new XC_MethodHook() {
+        XposedHelpers.findAndHookMethod(HookParams.getInstance().ReceiveLuckyMoneyRequestClassName, lpparam.classLoader, HookParams.getInstance().ReceiveLuckyMoneyRequestMethod, int.class, String.class, JSONObject.class, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) {
                 try {
-                    if (!HookClasses.hasTimingIdentifier) {
+                    if (!HookParams.getInstance().hasTimingIdentifier) {
                         return;
                     }
 
@@ -90,9 +90,11 @@ public class LuckMoney {
                         return;
                     }
                     LuckyMoneyMessage luckyMoneyMessage = luckyMoneyMessages.get(0);
-                    Object luckyMoneyRequest = newInstance(HookClasses.LuckyMoneyRequestClass,
+
+                    Class luckyMoneyRequestClass = XposedHelpers.findClass(HookParams.getInstance().LuckyMoneyRequestClassName, lpparam.classLoader);
+                    Object luckyMoneyRequest = newInstance(luckyMoneyRequestClass,
                             luckyMoneyMessage.getMsgType(), luckyMoneyMessage.getChannelId(), luckyMoneyMessage.getSendId(), luckyMoneyMessage.getNativeUrlString(), "", "", luckyMoneyMessage.getTalker(), "v1.0", timingIdentifier);
-                    callMethod(requestCaller, HookClasses.RequestCallerMethod, luckyMoneyRequest, getDelayTime());
+                    callMethod(requestCaller, HookParams.getInstance().RequestCallerMethod, luckyMoneyRequest, getDelayTime());
                     luckyMoneyMessages.remove(0);
 
                 } catch (Error | Exception e) {
@@ -100,7 +102,8 @@ public class LuckMoney {
             }
         });
 
-        XposedHelpers.findAndHookMethod(HookClasses.LuckyMoneyReceiveUIClassName, lpparam.classLoader, HookClasses.ReceiveUIMethod, int.class, int.class, String.class, HookClasses.ReceiveUIParamNameClass, new XC_MethodHook() {
+        Class receiveUIParamNameClass = XposedHelpers.findClass(HookParams.getInstance().ReceiveUIParamNameClassName, lpparam.classLoader);
+        XposedHelpers.findAndHookMethod(HookParams.getInstance().LuckyMoneyReceiveUIClassName, lpparam.classLoader, HookParams.getInstance().ReceiveUIMethod, int.class, int.class, String.class, receiveUIParamNameClass, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) {
                 try {
@@ -115,7 +118,7 @@ public class LuckMoney {
             }
         });
 
-        XposedHelpers.findAndHookMethod(HookClasses.ContactInfoUIClassName, lpparam.classLoader, "onCreate", Bundle.class, new XC_MethodHook() {
+        XposedHelpers.findAndHookMethod(HookParams.getInstance().ContactInfoUIClassName, lpparam.classLoader, "onCreate", Bundle.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) {
                 try {
@@ -131,7 +134,7 @@ public class LuckMoney {
             }
         });
 
-        XposedHelpers.findAndHookMethod(HookClasses.ChatroomInfoUIClassName, lpparam.classLoader, "onCreate", Bundle.class, new XC_MethodHook() {
+        XposedHelpers.findAndHookMethod(HookParams.getInstance().ChatroomInfoUIClassName, lpparam.classLoader, "onCreate", Bundle.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) {
                 try {
@@ -205,17 +208,22 @@ public class LuckMoney {
         int msgType = Integer.parseInt(nativeUrl.getQueryParameter("msgtype"));
         int channelId = Integer.parseInt(nativeUrl.getQueryParameter("channelid"));
         String sendId = nativeUrl.getQueryParameter("sendid");
-        requestCaller = callStaticMethod(HookClasses.NetworkRequestClass, HookClasses.GetNetworkByModelMethod);
 
-        if (HookClasses.hasTimingIdentifier) {
-            callMethod(requestCaller, HookClasses.RequestCallerMethod, newInstance(HookClasses.ReceiveLuckyMoneyRequestClass, channelId, sendId, nativeUrlString, 0, "v1.0"), 0);
+        Class networkRequestClass = XposedHelpers.findClass(HookParams.getInstance().NetworkRequestClassName, lpparam.classLoader);
+        requestCaller = callStaticMethod(networkRequestClass, HookParams.getInstance().GetNetworkByModelMethod);
+
+        Class receiveLuckyMoneyRequestClass = XposedHelpers.findClass(HookParams.getInstance().ReceiveLuckyMoneyRequestClassName, lpparam.classLoader);
+        if (HookParams.getInstance().hasTimingIdentifier) {
+            callMethod(requestCaller, HookParams.getInstance().RequestCallerMethod, newInstance(receiveLuckyMoneyRequestClass, channelId, sendId, nativeUrlString, 0, "v1.0"), 0);
             luckyMoneyMessages.add(new LuckyMoneyMessage(msgType, channelId, sendId, nativeUrlString, talker));
             return;
         }
-        Object luckyMoneyRequest = newInstance(HookClasses.LuckyMoneyRequestClass,
+
+        Class luckyMoneyRequestClass = XposedHelpers.findClass(HookParams.getInstance().LuckyMoneyRequestClassName, lpparam.classLoader);
+        Object luckyMoneyRequest = newInstance(luckyMoneyRequestClass,
                 msgType, channelId, sendId, nativeUrlString, "", "", talker, "v1.0");
 
-        callMethod(requestCaller, HookClasses.RequestCallerMethod, luckyMoneyRequest, getDelayTime());
+        callMethod(requestCaller, HookParams.getInstance().RequestCallerMethod, luckyMoneyRequest, getDelayTime());
     }
 
     private void handleTransfer(ContentValues contentValues, XC_LoadPackage.LoadPackageParam lpparam) throws IOException, XmlPullParserException, PackageManager.NameNotFoundException, InterruptedException, JSONException {
@@ -235,11 +243,14 @@ public class LuckMoney {
         int invalidtime = wcpayinfo.getInt("invalidtime");
 
         if (null == requestCaller) {
-            requestCaller = callStaticMethod(HookClasses.NetworkRequestClass, HookClasses.GetNetworkByModelMethod);
+            Class networkRequestClass = XposedHelpers.findClass(HookParams.getInstance().NetworkRequestClassName, lpparam.classLoader);
+            requestCaller = callStaticMethod(networkRequestClass, HookParams.getInstance().GetNetworkByModelMethod);
         }
 
         String talker = contentValues.getAsString("talker");
-        callMethod(requestCaller, HookClasses.RequestCallerMethod, newInstance(HookClasses.GetTransferRequestClass, transactionId, transferId, 0, "confirm", talker, invalidtime), 0);
+
+        Class getTransferRequestClass = XposedHelpers.findClass(HookParams.getInstance().GetTransferRequestClassName, lpparam.classLoader);
+        callMethod(requestCaller, HookParams.getInstance().RequestCallerMethod, newInstance(getTransferRequestClass, transactionId, transferId, 0, "confirm", talker, invalidtime), 0);
     }
 
 
