@@ -13,18 +13,8 @@ import me.firesun.wechat.enhancement.PreferencesUtils;
 import me.firesun.wechat.enhancement.util.HookParams;
 
 
-public class AutoLogin {
-    private static AutoLogin instance = null;
-
-    private AutoLogin() {
-    }
-
-    public static AutoLogin getInstance() {
-        if (instance == null)
-            instance = new AutoLogin();
-        return instance;
-    }
-
+public class AutoLogin implements IPlugin {
+    @Override
     public void hook(XC_LoadPackage.LoadPackageParam lpparam) {
         XposedHelpers.findAndHookMethod(android.app.Activity.class, "onStart", new XC_MethodHook() {
             @Override

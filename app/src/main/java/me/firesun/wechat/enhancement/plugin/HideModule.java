@@ -13,18 +13,8 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import me.firesun.wechat.enhancement.util.HookParams;
 
 
-public class HideModule {
-    private static HideModule instance = null;
-
-    private HideModule() {
-    }
-
-    public static HideModule getInstance() {
-        if (instance == null)
-            instance = new HideModule();
-        return instance;
-    }
-
+public class HideModule implements IPlugin {
+    @Override
     public void hook(XC_LoadPackage.LoadPackageParam lpparam) {
         XposedHelpers.findAndHookMethod("android.app.ApplicationPackageManager", lpparam.classLoader, "getInstalledApplications", int.class, new XC_MethodHook() {
             @Override

@@ -34,20 +34,11 @@ import static de.robv.android.xposed.XposedHelpers.findFirstFieldByExactType;
 import static de.robv.android.xposed.XposedHelpers.newInstance;
 
 
-public class LuckMoney {
-    private static LuckMoney instance = null;
+public class LuckMoney implements IPlugin {
     private static Object requestCaller;
     private static List<LuckyMoneyMessage> luckyMoneyMessages = new ArrayList<>();
 
-    private LuckMoney() {
-    }
-
-    public static LuckMoney getInstance() {
-        if (instance == null)
-            instance = new LuckMoney();
-        return instance;
-    }
-
+    @Override
     public void hook(final XC_LoadPackage.LoadPackageParam lpparam) {
         XposedHelpers.findAndHookMethod(HookParams.getInstance().SQLiteDatabaseClassName, lpparam.classLoader, HookParams.getInstance().SQLiteDatabaseInsertMethod, String.class, String.class, ContentValues.class, new XC_MethodHook() {
             @Override
@@ -71,7 +62,6 @@ public class LuckMoney {
                 }
             }
         });
-
 
         XposedHelpers.findAndHookMethod(HookParams.getInstance().ReceiveLuckyMoneyRequestClassName, lpparam.classLoader, HookParams.getInstance().ReceiveLuckyMoneyRequestMethod, int.class, String.class, JSONObject.class, new XC_MethodHook() {
             @Override

@@ -15,21 +15,12 @@ import me.firesun.wechat.enhancement.PreferencesUtils;
 import me.firesun.wechat.enhancement.util.HookParams;
 
 
-public class AntiRevoke {
-    private static AntiRevoke instance = null;
+public class AntiRevoke implements IPlugin {
     private static Map<Long, Object> msgCacheMap = new HashMap<>();
     private static Object storageInsertClazz;
 
-    private AntiRevoke() {
-    }
-
-    public static AntiRevoke getInstance() {
-        if (instance == null)
-            instance = new AntiRevoke();
-        return instance;
-    }
-
-    public static void hook(XC_LoadPackage.LoadPackageParam lpparam) {
+    @Override
+    public void hook(XC_LoadPackage.LoadPackageParam lpparam) {
         XposedHelpers.findAndHookMethod(HookParams.getInstance().SQLiteDatabaseClassName, lpparam.classLoader, HookParams.getInstance().SQLiteDatabaseUpdateMethod, String.class, ContentValues.class, String.class, String[].class, int.class, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) {
@@ -108,7 +99,7 @@ public class AntiRevoke {
         });
     }
 
-    private static void handleMessageRecall(ContentValues contentValues) {
+    private void handleMessageRecall(ContentValues contentValues) {
         long msgId = contentValues.getAsLong("msgId");
         Object msg = msgCacheMap.get(msgId);
 

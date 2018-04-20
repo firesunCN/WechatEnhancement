@@ -8,7 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 
-public class Receiver extends BroadcastReceiver {
+public class ConfigReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {

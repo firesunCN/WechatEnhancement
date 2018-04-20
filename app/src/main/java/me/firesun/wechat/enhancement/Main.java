@@ -5,6 +5,8 @@ import android.content.ContextWrapper;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
+import java.util.List;
+
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
@@ -14,6 +16,7 @@ import me.firesun.wechat.enhancement.plugin.AntiRevoke;
 import me.firesun.wechat.enhancement.plugin.AntiSnsDelete;
 import me.firesun.wechat.enhancement.plugin.AutoLogin;
 import me.firesun.wechat.enhancement.plugin.HideModule;
+import me.firesun.wechat.enhancement.plugin.IPlugin;
 import me.firesun.wechat.enhancement.plugin.LuckMoney;
 import me.firesun.wechat.enhancement.util.HookParams;
 import me.firesun.wechat.enhancement.util.SearchClasses;
@@ -22,6 +25,15 @@ import static de.robv.android.xposed.XposedBridge.log;
 
 
 public class Main implements IXposedHookLoadPackage {
+
+    private static IPlugin[] plugins={
+            new ADBlock(),
+            new AntiRevoke(),
+            new AntiSnsDelete(),
+            new AutoLogin(),
+            new HideModule(),
+            new LuckMoney(),
+    };
 
     @Override
     public void handleLoadPackage(final LoadPackageParam lpparam) {
@@ -64,17 +76,16 @@ public class Main implements IXposedHookLoadPackage {
         return "";
     }
 
+
     private void loadPlugins(LoadPackageParam lpparam) {
-        try {
-            ADBlock.getInstance().hook(lpparam);
-            AntiRevoke.getInstance().hook(lpparam);
-            AntiSnsDelete.getInstance().hook(lpparam);
-            LuckMoney.getInstance().hook(lpparam);
-            AutoLogin.getInstance().hook(lpparam);
-            HideModule.getInstance().hook(lpparam);
-        } catch (Error | Exception e) {
-            log("loadPlugins error" + e);
+        for (IPlugin plugin:plugins) {
+            try {
+                plugin.hook(lpparam);
+            } catch (Error | Exception e) {
+                log("loadPlugins error" + e);
+            }
         }
+
     }
 
 }

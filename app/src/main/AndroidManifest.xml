@@ -36,7 +36,7 @@
             android:name="xposedminversion"
             android:value="30" />
 
-        <receiver android:name=".util.Receiver" android:enabled="true">
+        <receiver android:name=".util.ConfigReceiver" android:enabled="true">
             <intent-filter>
                 <action android:name="wechat.intent.action.SAVE_WECHAT_ENHANCEMENT_CONFIG" />
             </intent-filter>

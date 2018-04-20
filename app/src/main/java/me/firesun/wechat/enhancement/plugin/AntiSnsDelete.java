@@ -13,19 +13,8 @@ import me.firesun.wechat.enhancement.util.HookParams;
 import static java.util.Arrays.copyOfRange;
 
 
-public class AntiSnsDelete {
-    private static AntiSnsDelete instance = null;
-
-    private AntiSnsDelete() {
-    }
-
-    public static AntiSnsDelete getInstance() {
-        if (instance == null)
-            instance = new AntiSnsDelete();
-        return instance;
-    }
-
-
+public class AntiSnsDelete implements IPlugin {
+    @Override
     public void hook(XC_LoadPackage.LoadPackageParam lpparam) {
 
         XposedHelpers.findAndHookMethod(HookParams.getInstance().SQLiteDatabaseClassName, lpparam.classLoader, HookParams.getInstance().SQLiteDatabaseUpdateMethod, String.class, ContentValues.class, String.class, String[].class, int.class, new XC_MethodHook() {
