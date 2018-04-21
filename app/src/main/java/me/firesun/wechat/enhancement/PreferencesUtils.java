@@ -77,9 +77,9 @@ public class PreferencesUtils {
         return getInstance().getBoolean("is_auto_login", false);
     }
 
-//    public static boolean isBreakLimit() {
-//        return getInstance().getBoolean("is_break_limit", false);
-//    }
+    public static boolean isBreakLimit() {
+        return getInstance().getBoolean("is_break_limit", false);
+    }
 
 }
 

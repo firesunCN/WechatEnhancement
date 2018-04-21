@@ -81,10 +81,10 @@
             android:defaultValue="false"
             android:key="is_auto_login"
             android:title="@string/pref_enable_autologin" />
-        <!--<SwitchPreference-->
-            <!--android:defaultValue="true"-->
-            <!--android:key="is_break_limit"-->
-            <!--android:title="@string/pref_break_limit" />-->
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="is_break_limit"
+            android:title="@string/pref_break_limit" />
     </PreferenceCategory>
 
 

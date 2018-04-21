@@ -23,7 +23,7 @@ import me.firesun.wechat.enhancement.Main;
 import static de.robv.android.xposed.XposedBridge.log;
 
 public class SearchClasses {
-    private static List<String> wxClasses = new ArrayList();
+    private static List<String> wxClasses = new ArrayList<String>();
     private static XSharedPreferences preferencesInstance = null;
 
     public static void init(Context context, XC_LoadPackage.LoadPackageParam lpparam, String versionName) {
@@ -153,10 +153,22 @@ public class SearchClasses {
                 .firstOrNull()
                 .getName();
 
+
+        Class SelectConversationUIClass = XposedHelpers.findClass(hp.SelectConversationUIClassName, lpparam.classLoader);
+        hp.SelectConversationUICheckLimitMethod = ReflectionUtil.findMethodsByExactParameters(SelectConversationUIClass,
+                boolean.class, boolean.class)
+                .getName();
+
+        hp.ContactInfoClassName = ReflectionUtil.findClassesFromPackage(lpparam.classLoader, wxClasses, "com.tencent.mm.storage", 0)
+                .filterByMethod(String.class, "getCityCode")
+                .filterByMethod(String.class, "getCountryCode")
+                .firstOrNull()
+                .getName();
+
         saveConfig(context);
     }
 
-    public static int getVersionNum(String version) {
+    private static int getVersionNum(String version) {
         String[] v = version.split("\\.");
         if (v.length == 3)
             return Integer.valueOf(v[0]) * 100 * 100 + Integer.valueOf(v[1]) * 100 + Integer.valueOf(v[2]);

@@ -11,12 +11,15 @@ public class HookParams {
     public String SQLiteDatabaseInsertMethod = "insert";
     public String SQLiteDatabaseDeleteMethod = "delete";
     public String ContactInfoUIClassName = "com.tencent.mm.plugin.profile.ui.ContactInfoUI";
+
+    public String ContactInfoClassName;
     public String ChatroomInfoUIClassName = "com.tencent.mm.plugin.chatroom.ui.ChatroomInfoUI";
     public String WebWXLoginUIClassName = "com.tencent.mm.plugin.webwx.ui.ExtDeviceWXLoginUI";
     public String AlbumPreviewUIClassName = "com.tencent.mm.plugin.gallery.ui.AlbumPreviewUI";
     public String SelectContactUIClassName = "com.tencent.mm.ui.contact.SelectContactUI";
     public String MMActivityClassName = "com.tencent.mm.ui.MMActivity";
     public String SelectConversationUIClassName = "com.tencent.mm.ui.transmit.SelectConversationUI";
+    public String SelectConversationUICheckLimitMethod;
     public String LuckyMoneyReceiveUIClassName = "com.tencent.mm.plugin.luckymoney.ui.LuckyMoneyReceiveUI";
     public String XMLParserClassName;
     public String XMLParserMethod;

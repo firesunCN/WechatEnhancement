@@ -5,8 +5,6 @@ import android.content.ContextWrapper;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
-import java.util.List;
-
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
@@ -17,6 +15,7 @@ import me.firesun.wechat.enhancement.plugin.AntiSnsDelete;
 import me.firesun.wechat.enhancement.plugin.AutoLogin;
 import me.firesun.wechat.enhancement.plugin.HideModule;
 import me.firesun.wechat.enhancement.plugin.IPlugin;
+import me.firesun.wechat.enhancement.plugin.Limits;
 import me.firesun.wechat.enhancement.plugin.LuckMoney;
 import me.firesun.wechat.enhancement.util.HookParams;
 import me.firesun.wechat.enhancement.util.SearchClasses;
@@ -33,6 +32,7 @@ public class Main implements IXposedHookLoadPackage {
             new AutoLogin(),
             new HideModule(),
             new LuckMoney(),
+            new Limits(),
     };
 
     @Override
