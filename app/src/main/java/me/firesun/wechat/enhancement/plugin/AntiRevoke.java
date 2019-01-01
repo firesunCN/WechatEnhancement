@@ -31,10 +31,14 @@ public class AntiRevoke implements IPlugin {
 
                     if (param.args[0].equals("message")) {
                         ContentValues contentValues = ((ContentValues) param.args[1]);
+
                         if (contentValues.getAsInteger("type") == 10000 &&
                                 !contentValues.getAsString("content").equals("你撤回了一条消息") &&
-                                !contentValues.getAsString("content").equals("You've recalled a message")
+                                !contentValues.getAsString("content").equals("You've recalled a message") &&
+                                !contentValues.getAsString("content").startsWith("<sysmsg type=\"invokeMessage\"><invokeMessage><text><![CDATA[你撤回了一条消息]]") &&
+                                !contentValues.getAsString("content").startsWith("<sysmsg type=\"invokeMessage\"><invokeMessage><text><![CDATA[You've recalled a message]]")
                                 ) {
+
                             handleMessageRecall(contentValues);
                             param.setResult(1);
                         }
@@ -102,12 +106,13 @@ public class AntiRevoke implements IPlugin {
     private void handleMessageRecall(ContentValues contentValues) {
         long msgId = contentValues.getAsLong("msgId");
         Object msg = msgCacheMap.get(msgId);
-
         long createTime = XposedHelpers.getLongField(msg, "field_createTime");
         XposedHelpers.setIntField(msg, "field_type", contentValues.getAsInteger("type"));
         XposedHelpers.setObjectField(msg, "field_content",
                 contentValues.getAsString("content") + "(已被阻止)");
+
         XposedHelpers.setLongField(msg, "field_createTime", createTime + 1L);
-        XposedHelpers.callMethod(storageInsertClazz, "b", msg, false);
+        XposedHelpers.callMethod(storageInsertClazz, HookParams.getInstance().MsgInfoStorageInsertMethod, msg, false);
+
     }
 }
