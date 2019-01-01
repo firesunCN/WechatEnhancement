@@ -1,10 +1,11 @@
 # 微信增强插件 WechatEnhancement
-本项目需要Xposed，同时支持[VirtualXposed](https://github.com/android-hacker/VirtualXposed) 
-（如果要在VirtualXposed下使用全部功能，请关闭VirtualXposed的保守模式）
+本项目需要Xposed，同时支持太极与[VirtualXposed](https://github.com/android-hacker/VirtualXposed) 
+
 
 ## 支持的微信版本
 理论上支持微信全版本，自适应方式采用微信巫师的自动搜索方式，所以理论上即使微信升级也可继续支持
-已测试通过的微信版本：6.6.0，6.6.3，6.6.5，6.6.6，6.6.7，6.7.3
+已测试通过的微信版本：7.0.0，6.6.0，6.6.3，6.6.5，6.6.6，6.6.7，6.7.3
+微信7目前支持抢红包，朋友圈防删除，自动接收转账，电脑端微信自动登录，突破发送图片9张限制等，暂不支持消息防撤回
 
 ## 支持功能
 - 抢红包
@@ -13,6 +14,7 @@
 - 朋友圈防删除
 - 朋友圈去广告
 - 电脑端微信自动登录
+- 突破发送图片9张限制
 
 ## 效果预览
 <img src="https://raw.githubusercontent.com/firesunCN/WechatEnhancement/master/image/screenshot1.jpg" width="45%" /> <img src="https://raw.githubusercontent.com/firesunCN/WechatEnhancement/master/image/screenshot2.jpg" width="45%" />
