@@ -38,12 +38,14 @@ public class SearchClasses {
         int versionNum = getVersionNum(versionName);
         if (versionNum >= getVersionNum("6.5.6") && versionNum <= getVersionNum("6.5.23"))
             hp.LuckyMoneyReceiveUIClassName = "com.tencent.mm.plugin.luckymoney.ui.En_fba4b94f";
-        if (versionNum >= getVersionNum("7.0.0"))
-            hp.LuckyMoneyReceiveUIClassName = "com.tencent.mm.plugin.luckymoney.ui.LuckyMoneyNotHookReceiveUI";
         if (versionNum < getVersionNum("6.5.8"))
             hp.SQLiteDatabaseClassName = "com.tencent.mmdb.database.SQLiteDatabase";
         if (versionNum < getVersionNum("6.5.4"))
             hp.hasTimingIdentifier = false;
+        if (versionNum >= getVersionNum("7.0.0"))
+            hp.LuckyMoneyReceiveUIClassName = "com.tencent.mm.plugin.luckymoney.ui.LuckyMoneyNotHookReceiveUI";
+        if (versionNum >= getVersionNum("7.0.0"))
+            hp.ChatroomInfoUIClassName = "com.tencent.mm.chatroom.ui.ChatroomInfoUI";
 
         ApkFile apkFile = null;
         try {
