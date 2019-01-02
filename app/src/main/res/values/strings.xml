@@ -12,7 +12,7 @@
     <string name="delay_message">延迟0毫秒拆开红包</string>
     <string name="setting">设置</string>
     <string name="luckmoney_setting">红包设置</string>
-    <string name="other_setting">其他设置</string>
+    <string name="other_setting">设置</string>
     <string name="AntiRevoke_setting">防撤回设置</string>
     <string name="function_setting">增强功能</string>
     <string name="pref_enable_adblock">过滤朋友圈广告</string>
@@ -22,6 +22,7 @@
     <string name="pref_enable_anti_sns_delete">朋友圈防删除</string>
     <string name="pref_show_icon">显示图标</string>
     <string name="repair">尝试修复插件</string>
+    <string name="generate">生成本机配置</string>
     <string name="repair_done">修复完成，请重启微信</string>
     <string name="about">关于</string>
     <string name="author">作者</string>
@@ -32,4 +33,7 @@
     <string name="not_contains_hit">请输入关键字, 以,分隔</string>
     <string name="black_list">包含微信ID不抢</string>
     <string name="black_list_hit">请输入微信ID, 以,分隔</string>
+    <string name="generate_success">生成配置成功</string>
+    <string name="generate_failed">生成配置失败</string>
+    <string name="generating">正在生成配置…</string>
 </resources>
