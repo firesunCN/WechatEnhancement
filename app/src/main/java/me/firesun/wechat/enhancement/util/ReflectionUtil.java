@@ -170,7 +170,6 @@ public final class ReflectionUtil {
     public static final Method findMethodExactIfExists(Class clazz, String methodName, Class... parameterTypes) {
         Method method = null;
         try {
-            // method = XposedHelpers.findMethodExact(clazz, methodName, (Class[]) Arrays.copyOf(parameterTypes, parameterTypes.length));
             method = findMethodExact(clazz, methodName, (Class[]) Arrays.copyOf(parameterTypes, parameterTypes.length));
         } catch (Error | Exception e) {
         }
