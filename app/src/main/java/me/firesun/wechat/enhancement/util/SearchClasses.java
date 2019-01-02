@@ -20,18 +20,26 @@ import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import me.firesun.wechat.enhancement.Main;
 
-import static de.robv.android.xposed.XposedBridge.log;
+import static me.firesun.wechat.enhancement.util.ReflectionUtil.log;
 
 public class SearchClasses {
     private static List<String> wxClasses = new ArrayList<>();
     private static XSharedPreferences preferencesInstance = null;
 
-    public static void init(Context context, XC_LoadPackage.LoadPackageParam lpparam, String versionName) {
+    public static void init(Context context, XC_LoadPackage.LoadPackageParam lparam, String versionName) {
 
-        if (loadConfig(lpparam, versionName))
+        if (loadConfig(lparam, versionName))
             return;
 
         log("failed to load config, start finding...");
+
+        generateConfig(lparam.appInfo.sourceDir, lparam.classLoader, versionName);
+
+        saveConfig(context);
+    }
+
+    public static void generateConfig(String wechatApk, ClassLoader classLoader, String versionName) {
+
         HookParams hp = HookParams.getInstance();
         hp.versionName = versionName;
         hp.versionCode = HookParams.VERSION_CODE;
@@ -49,8 +57,11 @@ public class SearchClasses {
 
         ApkFile apkFile = null;
         try {
-            apkFile = new ApkFile(lpparam.appInfo.sourceDir);
+            apkFile = new ApkFile(wechatApk);
             DexClass[] dexClasses = apkFile.getDexClasses();
+
+            wxClasses.clear();
+
             for (int i = 0; i < dexClasses.length; i++) {
                 wxClasses.add(ReflectionUtil.getClassName(dexClasses[i]));
             }
@@ -66,14 +77,14 @@ public class SearchClasses {
 
         //LuckMoney
         try {
-            Class ReceiveUIParamNameClass = ReflectionUtil.findClassesFromPackage(lpparam.classLoader, wxClasses, "com.tencent.mm", 1)
+            Class ReceiveUIParamNameClass = ReflectionUtil.findClassesFromPackage(classLoader, wxClasses, "com.tencent.mm", 1)
                     .filterByMethod(String.class, "getInfo")
                     .filterByMethod(int.class, "getType")
                     .filterByMethod(void.class, "reset")
                     .firstOrNull();
             hp.ReceiveUIParamNameClassName = ReceiveUIParamNameClass.getName();
 
-            Class RequestCallerClass = ReflectionUtil.findClassesFromPackage(lpparam.classLoader, wxClasses, "com.tencent.mm", 1)
+            Class RequestCallerClass = ReflectionUtil.findClassesFromPackage(classLoader, wxClasses, "com.tencent.mm", 1)
                     .filterByField("foreground", "boolean")
                     .filterByMethod(void.class, int.class, String.class, int.class, boolean.class)
                     .filterByMethod(void.class, "cancel", int.class)
@@ -85,7 +96,7 @@ public class SearchClasses {
                     void.class, RequestCallerClass, int.class)
                     .getName();
 
-            Class NetworkRequestClass = ReflectionUtil.findClassesFromPackage(lpparam.classLoader, wxClasses, "com.tencent.mm", 1)
+            Class NetworkRequestClass = ReflectionUtil.findClassesFromPackage(classLoader, wxClasses, "com.tencent.mm", 1)
                     .filterByMethod(void.class, "unhold")
                     .filterByMethod(RequestCallerClass)
                     .firstOrNull();
@@ -95,7 +106,7 @@ public class SearchClasses {
                     RequestCallerClass)
                     .getName();
 
-            Class ReceiveLuckyMoneyRequestClass = ReflectionUtil.findClassesFromPackage(lpparam.classLoader, wxClasses, "com.tencent.mm.plugin.luckymoney", 1)
+            Class ReceiveLuckyMoneyRequestClass = ReflectionUtil.findClassesFromPackage(classLoader, wxClasses, "com.tencent.mm.plugin.luckymoney", 1)
                     .filterByField("msgType", "int")
                     .filterByMethod(void.class, int.class, String.class, JSONObject.class)
                     .firstOrNull();
@@ -105,7 +116,7 @@ public class SearchClasses {
                     void.class, int.class, String.class, JSONObject.class)
                     .getName();
 
-            hp.LuckyMoneyRequestClassName = ReflectionUtil.findClassesFromPackage(lpparam.classLoader, wxClasses, "com.tencent.mm.plugin.luckymoney", 1)
+            hp.LuckyMoneyRequestClassName = ReflectionUtil.findClassesFromPackage(classLoader, wxClasses, "com.tencent.mm.plugin.luckymoney", 1)
                     .filterByField("talker", "java.lang.String")
                     .filterByMethod(void.class, int.class, String.class, JSONObject.class)
                     .filterByMethod(int.class, "getType")
@@ -113,7 +124,7 @@ public class SearchClasses {
                     .firstOrNull()
                     .getName();
 
-            hp.GetTransferRequestClassName = ReflectionUtil.findClassesFromPackage(lpparam.classLoader, wxClasses, "com.tencent.mm.plugin.remittance", 1)
+            hp.GetTransferRequestClassName = ReflectionUtil.findClassesFromPackage(classLoader, wxClasses, "com.tencent.mm.plugin.remittance", 1)
                     .filterByField("java.lang.String")
                     .filterByNoField("int")
 
@@ -122,7 +133,7 @@ public class SearchClasses {
                     .firstOrNull()
                     .getName();
 
-            Class LuckyMoneyReceiveUIClass = XposedHelpers.findClass(hp.LuckyMoneyReceiveUIClassName, lpparam.classLoader);
+            Class LuckyMoneyReceiveUIClass = ReflectionUtil.findClassIfExists(hp.LuckyMoneyReceiveUIClassName, classLoader);
             hp.ReceiveUIMethod = ReflectionUtil.findMethodsByExactParameters(LuckyMoneyReceiveUIClass,
                     boolean.class, int.class, int.class, String.class, ReceiveUIParamNameClass)
                     .getName();
@@ -134,7 +145,7 @@ public class SearchClasses {
 
         //ADBlock
         try {
-            Class XMLParserClass = ReflectionUtil.findClassesFromPackage(lpparam.classLoader, wxClasses, "com.tencent.mm.sdk.platformtools", 0)
+            Class XMLParserClass = ReflectionUtil.findClassesFromPackage(classLoader, wxClasses, "com.tencent.mm.sdk.platformtools", 0)
                     .filterByMethod(Map.class, String.class, String.class)
                     .firstOrNull();
             hp.XMLParserClassName = XMLParserClass.getName();
@@ -148,7 +159,7 @@ public class SearchClasses {
 
         //AntiRevoke
         try {
-            ReflectionUtil.Classes storageClasses = ReflectionUtil.findClassesFromPackage(lpparam.classLoader, wxClasses, "com.tencent.mm.storage", 0);
+            ReflectionUtil.Classes storageClasses = ReflectionUtil.findClassesFromPackage(classLoader, wxClasses, "com.tencent.mm.storage", 0);
             Class MsgInfoClass = storageClasses
                     .filterByMethod(boolean.class, "isSystem")
                     .firstOrNull();
@@ -175,12 +186,12 @@ public class SearchClasses {
 
         //Photo Limits
         try {
-            Class SelectConversationUIClass = XposedHelpers.findClass(hp.SelectConversationUIClassName, lpparam.classLoader);
+            Class SelectConversationUIClass = XposedHelpers.findClass(hp.SelectConversationUIClassName, classLoader);
             hp.SelectConversationUICheckLimitMethod = ReflectionUtil.findMethodsByExactParameters(SelectConversationUIClass,
                     boolean.class, boolean.class)
                     .getName();
 
-            hp.ContactInfoClassName = ReflectionUtil.findClassesFromPackage(lpparam.classLoader, wxClasses, "com.tencent.mm.storage", 0)
+            hp.ContactInfoClassName = ReflectionUtil.findClassesFromPackage(classLoader, wxClasses, "com.tencent.mm.storage", 0)
                     .filterByMethod(String.class, "getCityCode")
                     .filterByMethod(String.class, "getCountryCode")
                     .firstOrNull()
@@ -189,8 +200,6 @@ public class SearchClasses {
         } catch (Error | Exception e) {
             log("Search Photo Limits Classes Failed!");
         }
-
-        saveConfig(context);
     }
 
     private static int getVersionNum(String version) {
