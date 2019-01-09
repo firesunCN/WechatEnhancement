@@ -23,8 +23,8 @@ android {
         applicationId "me.firesun.wechat.enhancement"
         minSdkVersion 17
         targetSdkVersion 23
-        versionCode 45
-        versionName "1.9.0"
+        versionCode 46
+        versionName "1.9.1"
     }
 
     buildTypes {

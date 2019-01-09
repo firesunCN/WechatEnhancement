@@ -68,7 +68,7 @@ public final class ReflectionUtil {
     }
 
     public static Classes findClassesFromPackage(ClassLoader loader, List<String> classes, String packageName, int depth) {
-        if (classesCache.containsKey(packageName)) {
+        if (classesCache.containsKey(packageName + depth)) {
             return (Classes) classesCache.get(packageName + depth);
         }
 
