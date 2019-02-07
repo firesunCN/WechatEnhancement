@@ -14,6 +14,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import de.robv.android.xposed.XposedBridge;
+
 public final class ReflectionUtil {
 
     private static final Map classesCache = new HashMap();
@@ -34,11 +36,11 @@ public final class ReflectionUtil {
             return;
         }
 
-        //if (xposedExist) {
-        //    XposedBridge.log(msg);
-        //} else {
+        if (xposedExist) {
+            XposedBridge.log(msg);
+        } else {
             Log.i("Xposed", "[WechatEnhancement] " + msg);
-        //}
+        }
     }
 
     public static Method findMethodsByExactParameters(Class clazz, Class returnType, Class... parameterTypes) {
