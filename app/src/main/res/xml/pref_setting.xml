@@ -102,6 +102,16 @@
     </PreferenceCategory>
 
 
+    <PreferenceCategory android:title="@string/secret_friend">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="is_secret_friend"
+            android:title="@string/pref_enable_secret_friend" />
+        <EditTextPreference
+            android:dependency="is_secret_friend"
+            android:key="secret_friend_ids"
+            android:title="@string/secret_friend_ids" />
+    </PreferenceCategory>
 
 
     <PreferenceCategory android:title="@string/about">

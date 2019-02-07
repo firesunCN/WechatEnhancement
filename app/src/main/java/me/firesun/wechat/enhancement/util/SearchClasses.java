@@ -11,6 +11,7 @@ import net.dongliu.apk.parser.bean.DexClass;
 
 import org.json.JSONObject;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -199,6 +200,35 @@ public class SearchClasses {
 
         } catch (Error | Exception e) {
             log("Search Photo Limits Classes Failed!");
+        }
+
+        //SecretFriend
+        try {
+            Class conversationWithCacheAdapterClass = ReflectionUtil.findClassesFromPackage(classLoader, wxClasses, "com.tencent.mm.ui.conversation", 0)
+                    .filterByMethod("clearCache")
+                    .firstOrNull();
+            hp.ConversationWithCacheAdapterClassName = conversationWithCacheAdapterClass.getName();
+            log("ConversationWithCacheAdapterClassName: " + hp.ConversationWithCacheAdapterClassName);
+            log(conversationWithCacheAdapterClass.getSuperclass().getName());
+
+//            Class MMBaseAdapterClass = ReflectionUtil.findClassesFromPackage(classLoader, wxClasses, "com.tencent.mm.ui", 0)
+//                    .filterBySuper(BaseAdapter.class)
+//                    .filterByField("TAG", "java.lang.String")
+//                    .firstOrNull();
+            Class MMBaseAdapterClass = conversationWithCacheAdapterClass.getSuperclass();
+            hp.MMBaseAdapterClassName = MMBaseAdapterClass.getName();
+            log("MMBaseAdapterClassName: " + hp.MMBaseAdapterClassName);
+            for (Method m: MMBaseAdapterClass.getDeclaredMethods()) {
+                if (m.getParameterTypes().length == 1 && m.getParameterTypes()[0] == int.class
+                        && !"getItem".equals(m.getName()) && !"getItemId".equals(m.getName())) {
+                    hp.MMBaseAdapter_getItemInternal = m.getName();
+                    log(hp.MMBaseAdapter_getItemInternal);
+                    break;
+                }
+            }
+        } catch (Error | Exception e) {
+            log("Search ConversationWithCacheAdapter Classes Failed! " + e);
+            //throw e;
         }
     }
 

@@ -81,6 +81,13 @@ public class PreferencesUtils {
         return getInstance().getBoolean("is_break_limit", false);
     }
 
+    public static boolean isEnableSecretFriend() {
+        return getInstance().getBoolean("is_secret_friend", false);
+    }
+
+    public static String secretFriendIds() {
+        return getInstance().getString("secret_friend_ids", "").replace("，", ",");
+    }
 }
 
 
