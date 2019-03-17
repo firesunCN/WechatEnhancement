@@ -4,23 +4,31 @@ package me.firesun.wechat.enhancement;
 import android.annotation.TargetApi;
 import android.app.Application;
 import android.app.FragmentManager;
+import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import java.lang.reflect.Method;
 
+import dalvik.system.PathClassLoader;
 import me.firesun.wechat.enhancement.util.HookParams;
+import me.firesun.wechat.enhancement.util.SearchClasses;
 
 
 public class SettingsActivity extends AppCompatActivity {
@@ -90,6 +98,61 @@ public class SettingsActivity extends AppCompatActivity {
                         Toast toast = Toast.makeText(context, getString(R.string.repair_done), Toast.LENGTH_SHORT);
                         toast.show();
                     }
+                    return true;
+                }
+            });
+
+            Preference generate = findPreference("generate");
+            generate.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference pref) {
+                    final Context context = getApplication();
+                    if (context == null) {
+                        return false;
+                    }
+                    final PackageManager packageManager = context.getPackageManager();
+                    if (packageManager == null) {
+                        return false;
+                    }
+
+                    final ProgressDialog dialog = new ProgressDialog(getActivity());
+                    dialog.setCancelable(false);
+                    dialog.setMessage(getResources().getString(R.string.generating));
+                    dialog.show();
+
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            boolean success = false;
+                            try {
+                                PackageInfo packageInfo = packageManager.getPackageInfo(HookParams.WECHAT_PACKAGE_NAME, 0);
+                                String wechatApk = packageInfo.applicationInfo.sourceDir;
+                                PathClassLoader wxClassLoader = new PathClassLoader(wechatApk, ClassLoader.getSystemClassLoader());
+                                SearchClasses.generateConfig(wechatApk, wxClassLoader, packageInfo.versionName);
+
+                                String config = new Gson().toJson(HookParams.getInstance());
+                                SharedPreferences.Editor editor = context.getSharedPreferences(HookParams.WECHAT_ENHANCEMENT_CONFIG_NAME, Context.MODE_WORLD_READABLE).edit();
+                                editor.clear();
+                                editor.putString("params", config);
+                                editor.commit();
+
+                                success = true;
+
+                            } catch (Throwable e) {
+                                e.printStackTrace();
+                            }
+
+                            final String msg = getResources().getString(success ? R.string.generate_success : R.string.generate_failed);
+                            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    dialog.dismiss();
+                                    Toast.makeText(getApplication(), msg, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    }, "generate-config").start();
+
                     return true;
                 }
             });

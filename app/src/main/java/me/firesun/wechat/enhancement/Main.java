@@ -25,7 +25,7 @@ import static de.robv.android.xposed.XposedBridge.log;
 
 public class Main implements IXposedHookLoadPackage {
 
-    private static IPlugin[] plugins={
+    private static IPlugin[] plugins = {
             new ADBlock(),
             new AntiRevoke(),
             new AntiSnsDelete(),
@@ -61,9 +61,7 @@ public class Main implements IXposedHookLoadPackage {
                 });
             } catch (Error | Exception e) {
             }
-
         }
-
     }
 
     private String getVersionName(Context context, String packageName) {
@@ -78,14 +76,13 @@ public class Main implements IXposedHookLoadPackage {
 
 
     private void loadPlugins(LoadPackageParam lpparam) {
-        for (IPlugin plugin:plugins) {
+        for (IPlugin plugin : plugins) {
             try {
                 plugin.hook(lpparam);
             } catch (Error | Exception e) {
                 log("loadPlugins error" + e);
             }
         }
-
     }
 
 }
