@@ -17,6 +17,7 @@ import me.firesun.wechat.enhancement.plugin.HideModule;
 import me.firesun.wechat.enhancement.plugin.IPlugin;
 import me.firesun.wechat.enhancement.plugin.Limits;
 import me.firesun.wechat.enhancement.plugin.LuckMoney;
+import me.firesun.wechat.enhancement.plugin.SecretFriend;
 import me.firesun.wechat.enhancement.util.HookParams;
 import me.firesun.wechat.enhancement.util.SearchClasses;
 
@@ -33,6 +34,7 @@ public class Main implements IXposedHookLoadPackage {
             new HideModule(),
             new LuckMoney(),
             new Limits(),
+            new SecretFriend()
     };
 
     @Override

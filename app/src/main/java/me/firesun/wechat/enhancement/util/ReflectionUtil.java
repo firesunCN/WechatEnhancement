@@ -292,6 +292,28 @@ public final class ReflectionUtil {
             return new Classes(arrayList);
         }
 
+        public final Classes filterByMethod(String methodName, Class... parameterTypes) {
+            List arrayList = new ArrayList();
+            for (Object next : this.classes) {
+                Method method = ReflectionUtil.findMethodExactIfExists((Class) next, methodName, (Class[]) Arrays.copyOf(parameterTypes, parameterTypes.length));
+                if (method != null) {
+                    arrayList.add(next);
+                }
+            }
+
+            return new Classes(arrayList);
+        }
+
+        public final Classes filterBySuper(Class superClass) {
+            List arrayList = new ArrayList();
+            for (Class next : this.classes) {
+                if (next.getSuperclass() == superClass) {
+                    arrayList.add(next);
+                }
+            }
+            return new Classes(arrayList);
+        }
+
         public final Class<?> firstOrNull() {
             if (this.classes.isEmpty())
                 return null;
@@ -303,5 +325,6 @@ public final class ReflectionUtil {
             }
             return this.classes.get(0);
         }
+
     }
 }
