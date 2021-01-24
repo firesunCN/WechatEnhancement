@@ -69,10 +69,6 @@ public class PreferencesUtils {
         return getInstance().getBoolean("is_anti_sns_delete", false);
     }
 
-    public static boolean isADBlock() {
-        return getInstance().getBoolean("is_ad_block", false);
-    }
-
     public static boolean isAutoLogin() {
         return getInstance().getBoolean("is_auto_login", false);
     }

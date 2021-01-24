@@ -9,7 +9,6 @@ import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
-import me.firesun.wechat.enhancement.plugin.ADBlock;
 import me.firesun.wechat.enhancement.plugin.AntiRevoke;
 import me.firesun.wechat.enhancement.plugin.AntiSnsDelete;
 import me.firesun.wechat.enhancement.plugin.AutoLogin;
@@ -26,7 +25,6 @@ import static de.robv.android.xposed.XposedBridge.log;
 public class Main implements IXposedHookLoadPackage {
 
     private static IPlugin[] plugins = {
-            new ADBlock(),
             new AntiRevoke(),
             new AntiSnsDelete(),
             new AutoLogin(),

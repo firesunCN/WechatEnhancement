@@ -32,6 +32,7 @@ import static de.robv.android.xposed.XposedHelpers.callMethod;
 import static de.robv.android.xposed.XposedHelpers.callStaticMethod;
 import static de.robv.android.xposed.XposedHelpers.findFirstFieldByExactType;
 import static de.robv.android.xposed.XposedHelpers.newInstance;
+import static me.firesun.wechat.enhancement.util.SearchClasses.getVersionNum;
 
 
 public class LuckMoney implements IPlugin {
@@ -142,7 +143,7 @@ public class LuckMoney implements IPlugin {
 
     }
 
-    private void handleLuckyMoney(ContentValues contentValues, XC_LoadPackage.LoadPackageParam lpparam) throws XmlPullParserException, IOException, JSONException {
+    private void handleLuckyMoney(ContentValues contentValues, XC_LoadPackage.LoadPackageParam lpparam) throws JSONException {
         if (!PreferencesUtils.open()) {
             return;
         }
@@ -204,7 +205,10 @@ public class LuckMoney implements IPlugin {
 
         Class receiveLuckyMoneyRequestClass = XposedHelpers.findClass(HookParams.getInstance().ReceiveLuckyMoneyRequestClassName, lpparam.classLoader);
         if (HookParams.getInstance().hasTimingIdentifier) {
-            callMethod(requestCaller, HookParams.getInstance().RequestCallerMethod, newInstance(receiveLuckyMoneyRequestClass, channelId, sendId, nativeUrlString, 0, "v1.0"), 0);
+            if (getVersionNum(HookParams.getInstance().versionName) >= getVersionNum("8.0.0"))
+                callMethod(requestCaller, HookParams.getInstance().RequestCallerMethod, newInstance(receiveLuckyMoneyRequestClass, channelId, sendId, nativeUrlString, 0, "v1.0", ""), 0);
+            else
+                callMethod(requestCaller, HookParams.getInstance().RequestCallerMethod, newInstance(receiveLuckyMoneyRequestClass, channelId, sendId, nativeUrlString, 0, "v1.0"), 0);
             luckyMoneyMessages.add(new LuckyMoneyMessage(msgType, channelId, sendId, nativeUrlString, talker));
             return;
         }
@@ -216,7 +220,7 @@ public class LuckMoney implements IPlugin {
         callMethod(requestCaller, HookParams.getInstance().RequestCallerMethod, luckyMoneyRequest, getDelayTime());
     }
 
-    private void handleTransfer(ContentValues contentValues, XC_LoadPackage.LoadPackageParam lpparam) throws IOException, XmlPullParserException, PackageManager.NameNotFoundException, InterruptedException, JSONException {
+    private void handleTransfer(ContentValues contentValues, XC_LoadPackage.LoadPackageParam lpparam) throws JSONException {
         if (!PreferencesUtils.receiveTransfer()) {
             return;
         }

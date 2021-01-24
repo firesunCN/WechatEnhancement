@@ -24,8 +24,7 @@ public class HideModule implements IPlugin {
                     List<ApplicationInfo> resultApplicationList = new ArrayList<>();
                     for (ApplicationInfo applicationInfo : applicationList) {
                         String packageName = applicationInfo.packageName;
-                        if (!(packageName.contains("firesun") || packageName.contains("xposed"))) {
-
+                        if (!(packageName.contains("me.firesun") || packageName.contains("me.weishu") || packageName.contains("xposed"))) {
                             resultApplicationList.add(applicationInfo);
                         }
                     }
