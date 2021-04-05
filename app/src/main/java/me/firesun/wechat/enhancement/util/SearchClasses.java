@@ -3,23 +3,16 @@ package me.firesun.wechat.enhancement.util;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-
 import com.google.gson.Gson;
-
 import net.dongliu.apk.parser.ApkFile;
 import net.dongliu.apk.parser.bean.DexClass;
-
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
 import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import me.firesun.wechat.enhancement.Main;
-
 import static me.firesun.wechat.enhancement.util.ReflectionUtil.log;
 
 public class SearchClasses {
@@ -97,7 +90,7 @@ public class SearchClasses {
                     .getName();
 
             Class NetworkRequestClass = ReflectionUtil.findClassesFromPackage(classLoader, wxClasses, "com.tencent.mm", 1)
-                    .filterByMethod(void.class, "unhold")
+                    .filterByMethod("getSysCmdMsgExtension")
                     .filterByMethod(RequestCallerClass)
                     .firstOrNull();
             hp.NetworkRequestClassName = NetworkRequestClass.getName();
@@ -140,14 +133,13 @@ public class SearchClasses {
 
         } catch (Error | Exception e) {
             log("Search LuckMoney Classes Failed!");
-            throw e;
         }
 
         //AntiRevoke
         try {
             ReflectionUtil.Classes storageClasses = ReflectionUtil.findClassesFromPackage(classLoader, wxClasses, "com.tencent.mm.storage", 0);
             Class MsgInfoClass = storageClasses
-                    .filterByMethod(boolean.class, "isSystem")
+                    .filterByMethod(void.class, "unsetOmittedFailResend")
                     .firstOrNull();
             hp.MsgInfoClassName = MsgInfoClass.getName();
             if (versionNum < getVersionNum("6.5.8")) {
@@ -238,4 +230,5 @@ public class SearchClasses {
         }
         return preferencesInstance;
     }
+
 }
